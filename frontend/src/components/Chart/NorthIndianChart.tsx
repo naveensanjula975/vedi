@@ -15,20 +15,6 @@ interface Props {
 
 // North Indian chart house positions (relative to ascendant)
 // House 1 is always at top center
-const HOUSE_PATHS: Record<number, string> = {
-  1: 'M50,0 L100,50 L50,50 Z',      // Top center triangle
-  2: 'M100,0 L100,50 L50,50 Z',     // Top right
-  3: 'M100,0 L150,50 L100,50 Z',    // Right top
-  4: 'M100,50 L150,50 L100,100 Z',  // Right center
-  5: 'M100,100 L150,50 L150,150 Z', // Right bottom
-  6: 'M100,100 L150,150 L100,150 Z',// Bottom right
-  7: 'M50,100 L100,100 L100,150 L50,150 Z', // Bottom center
-  8: 'M50,100 L50,150 L0,150 Z',    // Bottom left
-  9: 'M0,50 L50,100 L0,150 Z',      // Left bottom
-  10: 'M0,50 L50,50 L50,100 Z',     // Left center
-  11: 'M0,0 L50,50 L0,50 Z',        // Left top
-  12: 'M0,0 L50,0 L50,50 Z',        // Top left
-};
 
 // Positions for planet text in each house
 const HOUSE_TEXT_POSITIONS: Record<number, [number, number]> = {
@@ -52,7 +38,7 @@ export const NorthIndianChart: React.FC<Props> = ({ planets, ascendantRashi }) =
   for (let i = 1; i <= 12; i++) {
     planetsByHouse[i] = [];
   }
-  
+
   planets.forEach(p => {
     // Calculate house number (1-12)
     let house = ((p.rashiIndex - ascendantRashi + 12) % 12) + 1;
@@ -66,36 +52,36 @@ export const NorthIndianChart: React.FC<Props> = ({ planets, ascendantRashi }) =
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <svg 
-        viewBox="0 0 150 150" 
+      <svg
+        viewBox="0 0 150 150"
         className="w-full h-auto"
         style={{ filter: 'drop-shadow(0 4px 20px rgba(59, 130, 246, 0.2))' }}
       >
         {/* Background */}
         <rect x="0" y="0" width="150" height="150" fill="#0d1424" rx="8" />
-        
+
         {/* Outer border with glow effect */}
-        <rect 
-          x="0" y="0" width="150" height="150" 
+        <rect
+          x="0" y="0" width="150" height="150"
           fill="none" stroke="#3380ff" strokeWidth="1.5" rx="8"
           style={{ filter: 'drop-shadow(0 0 8px rgba(51, 128, 255, 0.5))' }}
         />
-        
+
         {/* Center diamond */}
-        <polygon 
-          points="50,50 100,50 100,100 50,100" 
-          fill="#1a2234" 
-          stroke="#3380ff" 
+        <polygon
+          points="50,50 100,50 100,100 50,100"
+          fill="#1a2234"
+          stroke="#3380ff"
           strokeWidth="0.5"
           strokeOpacity="0.5"
         />
-        
+
         {/* Diagonal lines for houses */}
         <line x1="0" y1="0" x2="50" y2="50" stroke="#3380ff" strokeWidth="0.5" strokeOpacity="0.5" />
         <line x1="150" y1="0" x2="100" y2="50" stroke="#3380ff" strokeWidth="0.5" strokeOpacity="0.5" />
         <line x1="0" y1="150" x2="50" y2="100" stroke="#3380ff" strokeWidth="0.5" strokeOpacity="0.5" />
         <line x1="150" y1="150" x2="100" y2="100" stroke="#3380ff" strokeWidth="0.5" strokeOpacity="0.5" />
-        
+
         {/* Vertical and horizontal lines */}
         <line x1="50" y1="0" x2="50" y2="50" stroke="#3380ff" strokeWidth="0.5" strokeOpacity="0.5" />
         <line x1="100" y1="0" x2="100" y2="50" stroke="#3380ff" strokeWidth="0.5" strokeOpacity="0.5" />
@@ -111,21 +97,21 @@ export const NorthIndianChart: React.FC<Props> = ({ planets, ascendantRashi }) =
           const house = parseInt(houseStr);
           const rashi = getRashiForHouse(house);
           const planetsInHouse = planetsByHouse[house];
-          
+
           return (
             <g key={house}>
               {/* Rashi number */}
-              <text 
-                x={x} 
-                y={y - 8} 
-                textAnchor="middle" 
+              <text
+                x={x}
+                y={y - 8}
+                textAnchor="middle"
                 className="text-[8px]"
                 fill="#64748b"
                 fontFamily="monospace"
               >
                 {rashi + 1}
               </text>
-              
+
               {/* Planets */}
               {planetsInHouse.map((planet, idx) => (
                 <motion.text

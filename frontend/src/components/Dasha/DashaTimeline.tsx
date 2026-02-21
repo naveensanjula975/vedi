@@ -5,28 +5,27 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import { 
-  ChevronDown, 
-  ChevronUp, 
+import {
+  ChevronDown,
+  ChevronUp,
   Eye,
-  Heart, 
-  Wallet, 
-  Briefcase, 
-  Users, 
+  Heart,
+  Wallet,
+  Briefcase,
+  Users,
   Sparkles,
   Loader2,
   Star,
   CheckCircle,
   AlertTriangle,
   MinusCircle,
-  Gem,
-  Moon
+  Gem
 } from 'lucide-react';
 import type { DashaWithAntardashas, BirthData } from '../../types/astrology';
 import { DASHA_COLORS } from '../../types/astrology';
 import { formatDate, formatYears, formatDays } from '../../utils/dateUtils';
 import { parseISO, isWithinInterval } from 'date-fns';
-import { getAntardashaPrediction, getMahadashaPrediction, type DashaPredictionData } from '../../services/api';
+import { getAntardashaPrediction, type DashaPredictionData } from '../../services/api';
 
 interface Props {
   timeline: DashaWithAntardashas[];
@@ -100,14 +99,14 @@ const PredictionDisplay: React.FC<PredictionDisplayProps> = ({ prediction, mahad
       {/* Life Areas Grid */}
       <div className="p-4 space-y-2">
         <h5 className="text-sm font-semibold text-slate-300 mb-3">Life Area Outlook</h5>
-        
+
         {Object.entries(prediction.predictions).map(([area, data]) => {
           const config = AREA_CONFIG[area as keyof typeof AREA_CONFIG];
           if (!config) return null;
-          
+
           const Icon = config.icon;
           const isExpanded = expandedArea === area;
-          
+
           return (
             <div key={area} className="rounded-lg border border-slate-700/50 overflow-hidden bg-slate-800/30">
               <button
@@ -363,7 +362,7 @@ export const DashaTimeline: React.FC<Props> = ({ timeline, birthData, currentDat
                   </span>
                 )}
               </div>
-              
+
               <div className="flex items-center gap-4 text-white">
                 <div className="text-right text-sm">
                   <div className="opacity-80 font-mono text-xs">
@@ -396,7 +395,7 @@ export const DashaTimeline: React.FC<Props> = ({ timeline, birthData, currentDat
                       const isAdCurrent = isCurrent(ad.start, ad.end);
                       const adKey = `${mahadasha.lord}-${ad.lord}-${idx}-${adIdx}`;
                       const isSelected = selectedAntardasha?.key === adKey;
-                      
+
                       return (
                         <div key={`${ad.lord}-${adIdx}`}>
                           <motion.div
@@ -413,7 +412,7 @@ export const DashaTimeline: React.FC<Props> = ({ timeline, birthData, currentDat
                             `}
                           >
                             <div className="flex items-center gap-2">
-                              <span 
+                              <span
                                 className={`
                                   w-3 h-3 rounded-full
                                   ${DASHA_COLORS[ad.lord] || 'bg-slate-500'}
@@ -431,7 +430,7 @@ export const DashaTimeline: React.FC<Props> = ({ timeline, birthData, currentDat
                                 <Eye className={`w-4 h-4 ${isSelected ? 'text-cyber-400' : 'text-slate-500'}`} />
                               )}
                             </div>
-                            
+
                             <div className="text-right text-sm text-slate-400">
                               <div className="font-mono text-xs">{formatDate(ad.start)} – {formatDate(ad.end)}</div>
                               <div className="font-medium text-slate-300">{formatDays(ad.durationDays)}</div>
@@ -452,7 +451,7 @@ export const DashaTimeline: React.FC<Props> = ({ timeline, birthData, currentDat
                                     <span className="text-sm text-slate-400 font-mono">Loading predictions...</span>
                                   </div>
                                 ) : prediction ? (
-                                  <PredictionDisplay 
+                                  <PredictionDisplay
                                     prediction={prediction}
                                     mahadashaLord={mahadasha.lord}
                                     antardashaLord={ad.lord}

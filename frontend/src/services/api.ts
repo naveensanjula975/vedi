@@ -4,7 +4,11 @@
 
 import type { BirthData, Chart, DashaTimeline, CurrentDasha } from '../types/astrology';
 
-const API_BASE = '/api/v1';
+// In production (Vercel), VITE_API_BASE_URL is set to the Render backend URL.
+// In local dev, it is unset and Vite's proxy forwards /api/* to localhost:8000.
+const API_BASE = import.meta.env.VITE_API_BASE_URL
+  ? `${import.meta.env.VITE_API_BASE_URL}/api/v1`
+  : '/api/v1';
 
 // Helper to convert camelCase to snake_case for API requests
 function toSnakeCase(obj: Record<string, unknown>): Record<string, unknown> {
@@ -21,7 +25,7 @@ function toCamelCase<T>(obj: unknown): T {
   if (Array.isArray(obj)) {
     return obj.map(item => toCamelCase(item)) as T;
   }
-  
+
   if (obj !== null && typeof obj === 'object') {
     const result: Record<string, unknown> = {};
     for (const key in obj as Record<string, unknown>) {
@@ -30,12 +34,12 @@ function toCamelCase<T>(obj: unknown): T {
     }
     return result as T;
   }
-  
+
   return obj as T;
 }
 
 async function apiRequest<T>(
-  endpoint: string, 
+  endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
   const response = await fetch(`${API_BASE}${endpoint}`, {
@@ -69,7 +73,7 @@ export async function generateChart(birthData: BirthData): Promise<Chart> {
  * Get complete Dasha timeline with Antardashas
  */
 export async function getDashaTimeline(
-  birthData: BirthData, 
+  birthData: BirthData,
   yearsAhead: number = 120
 ): Promise<DashaTimeline> {
   const params = new URLSearchParams({ years_ahead: yearsAhead.toString() });
@@ -90,10 +94,10 @@ export async function getCurrentDasha(
   if (targetDate) {
     params.set('target_date', targetDate.toISOString());
   }
-  
+
   const queryString = params.toString();
   const url = queryString ? `/dasha/current?${queryString}` : '/dasha/current';
-  
+
   return apiRequest<CurrentDasha>(url, {
     method: 'POST',
     body: JSON.stringify(toSnakeCase(birthData as unknown as Record<string, unknown>)),
@@ -175,10 +179,10 @@ export async function getCurrentPrediction(
   if (targetDate) {
     params.set('target_date', targetDate.toISOString());
   }
-  
+
   const queryString = params.toString();
   const url = queryString ? `/predictions/current?${queryString}` : '/predictions/current';
-  
+
   return apiRequest<DashaPredictionData>(url, {
     method: 'POST',
     body: JSON.stringify(toSnakeCase(birthData as unknown as Record<string, unknown>)),

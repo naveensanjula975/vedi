@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // Mock fetch
 const mockFetch = vi.fn()
-global.fetch = mockFetch
+  ; (globalThis as unknown as { fetch: typeof mockFetch }).fetch = mockFetch
 
 describe('API Service', () => {
   beforeEach(() => {
@@ -18,7 +18,7 @@ describe('API Service', () => {
 
       const response = await fetch('/api/v1/health')
       const data = await response.json()
-      
+
       expect(data.status).toBe('ok')
       expect(data.version).toBe('0.2.0')
     })
@@ -31,7 +31,7 @@ describe('API Service', () => {
       })
 
       const response = await fetch('/api/v1/health')
-      
+
       expect(response.ok).toBe(false)
       expect(response.status).toBe(500)
     })

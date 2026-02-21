@@ -2,7 +2,7 @@
  * Main Application Component
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Moon, Sun, LayoutGrid, List, AlertCircle, Sparkles, Zap } from 'lucide-react';
@@ -77,7 +77,7 @@ function AppContent() {
                 <p className="text-xs text-cyber-400 font-mono uppercase tracking-wider">Astrology Engine</p>
               </div>
             </div>
-            
+
             {/* API Status */}
             <div className="flex items-center gap-3">
               {isHealthError ? (
@@ -111,11 +111,11 @@ function AppContent() {
                 <Moon className="w-5 h-5 text-cyber-400" />
                 Birth Details
               </h2>
-              <BirthDataForm 
-                onSubmit={handleSubmit} 
-                isLoading={generateChart.isPending} 
+              <BirthDataForm
+                onSubmit={handleSubmit}
+                isLoading={generateChart.isPending}
               />
-              
+
               {generateChart.isError && (
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -144,33 +144,30 @@ function AppContent() {
                   <div className="flex gap-1 bg-slate-900/60 backdrop-blur-sm rounded-xl p-1.5 border border-cyber-800/30">
                     <button
                       onClick={() => setActiveTab('chart')}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-300 ${
-                        activeTab === 'chart'
+                      className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-300 ${activeTab === 'chart'
                           ? 'bg-cyber-600 text-white shadow-neon'
                           : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                      }`}
+                        }`}
                     >
                       <LayoutGrid className="w-4 h-4" />
                       Chart
                     </button>
                     <button
                       onClick={() => setActiveTab('dasha')}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-300 ${
-                        activeTab === 'dasha'
+                      className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-300 ${activeTab === 'dasha'
                           ? 'bg-cyber-600 text-white shadow-neon'
                           : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                      }`}
+                        }`}
                     >
                       <List className="w-4 h-4" />
                       Timeline
                     </button>
                     <button
                       onClick={() => setActiveTab('predictions')}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-300 ${
-                        activeTab === 'predictions'
+                      className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-300 ${activeTab === 'predictions'
                           ? 'bg-cyber-600 text-white shadow-neon'
                           : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                      }`}
+                        }`}
                     >
                       <Sparkles className="w-4 h-4" />
                       Insights
@@ -187,21 +184,19 @@ function AppContent() {
                       <div className="flex justify-center gap-2">
                         <button
                           onClick={() => setChartStyle('south')}
-                          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                            chartStyle === 'south'
+                          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${chartStyle === 'south'
                               ? 'bg-cyber-600 text-white shadow-neon'
                               : 'bg-slate-800/50 text-slate-400 hover:text-white border border-slate-700/50'
-                          }`}
+                            }`}
                         >
                           South Indian
                         </button>
                         <button
                           onClick={() => setChartStyle('north')}
-                          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                            chartStyle === 'north'
+                          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${chartStyle === 'north'
                               ? 'bg-cyber-600 text-white shadow-neon'
                               : 'bg-slate-800/50 text-slate-400 hover:text-white border border-slate-700/50'
-                          }`}
+                            }`}
                         >
                           North Indian
                         </button>
@@ -262,7 +257,7 @@ function AppContent() {
                             <span className="font-mono text-sm">Loading timeline...</span>
                           </div>
                         ) : dashaTimeline ? (
-                          <DashaTimeline timeline={dashaTimeline.timeline} birthData={birthData} />
+                          <DashaTimeline timeline={dashaTimeline.timeline} birthData={birthData ?? undefined} />
                         ) : null}
                       </div>
                     </motion.div>
@@ -292,7 +287,7 @@ function AppContent() {
                     Ready to Analyze
                   </h3>
                   <p className="text-slate-400 max-w-md mx-auto text-sm leading-relaxed">
-                    Enter birth details to generate a comprehensive astrological chart 
+                    Enter birth details to generate a comprehensive astrological chart
                     with Vimshottari Dasha timeline and personalized insights.
                   </p>
                 </motion.div>

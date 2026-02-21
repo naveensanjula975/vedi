@@ -5,7 +5,8 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { getCurrentPrediction, type DashaPredictionData, type BirthData } from '../../services/api';
+import { getCurrentPrediction } from '../../services/api';
+import type { BirthData } from '../../types/astrology';
 import DashaPrediction from './DashaPrediction';
 import { Loader2, Calendar, Moon, Star } from 'lucide-react';
 
@@ -71,7 +72,7 @@ export const CurrentPrediction: React.FC<Props> = ({ birthData }) => {
             <Calendar className="w-5 h-5 text-cyber-400" />
             Currently Running Periods
           </h3>
-          
+
           <div className="grid md:grid-cols-3 gap-4">
             {/* Mahadasha */}
             <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50">
