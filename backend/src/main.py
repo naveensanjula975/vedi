@@ -2,6 +2,8 @@
 FastAPI application entry point for Vedic Astrology API.
 """
 
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -49,15 +51,27 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# Configure CORS for local development
+# Configure CORS
+# Production Vercel URL is always included as a hardcoded default.
+# To add more URLs (e.g. preview deployments), set the CORS_ORIGINS env var
+# on Heroku: heroku config:set CORS_ORIGINS="https://other-preview.vercel.app"
+_default_origins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
+    "https://vedi-cyan.vercel.app",
+]
+_extra_origins = [
+    o.strip()
+    for o in os.environ.get("CORS_ORIGINS", "").split(",")
+    if o.strip()
+]
+_allowed_origins = list(dict.fromkeys(_default_origins + _extra_origins))
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173",
-    ],
+    allow_origins=_allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
