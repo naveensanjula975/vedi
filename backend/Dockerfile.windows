@@ -31,7 +31,7 @@ RUN pip install --no-cache-dir poetry
 RUN poetry config virtualenvs.create false
 
 # Install Python dependencies using Poetry
-RUN poetry install --no-dev --no-interaction --no-ansi
+RUN poetry install --only main --no-root --no-interaction --no-ansi
 
 # Copy source code with proper permissions
 COPY src/ ./src/

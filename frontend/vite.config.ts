@@ -3,6 +3,9 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 // https://vitejs.dev/config/
+// VITE_BACKEND_HOST is set to 'backend' in Docker (service name) and defaults to '127.0.0.1' locally
+const backendHost = process.env.VITE_BACKEND_HOST || '127.0.0.1'
+
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -14,7 +17,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8000',
+        target: `http://${backendHost}:8000`,
         changeOrigin: true,
       },
     },
