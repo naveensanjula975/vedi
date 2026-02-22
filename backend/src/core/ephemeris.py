@@ -8,6 +8,18 @@ from datetime import datetime
 from typing import NamedTuple
 from dataclasses import dataclass
 import pytz
+import logging
+
+logger = logging.getLogger(__name__)
+
+# Use the ephemeris data bundled with pyswisseph.  Passing an empty string
+# (or the result of swe.get_library_path()) lets the library locate its own
+# bundled .se1 files instead of searching a hard-coded filesystem path that
+# would not exist on Heroku dynos.
+try:
+    swe.set_ephe_path('')
+except Exception as _e:
+    logger.warning("swe.set_ephe_path('') failed: %s — using default ephemeris path", _e)
 
 
 class PlanetPosition(NamedTuple):

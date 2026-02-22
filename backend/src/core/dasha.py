@@ -49,7 +49,9 @@ class DashaPeriodInfo:
     
     def contains_date(self, date: datetime) -> bool:
         """Check if a date falls within this period."""
-        return self.start <= date <= self.end
+        # Strip timezone info to compare as naive datetimes
+        cmp = date.replace(tzinfo=None) if date.tzinfo is not None else date
+        return self.start <= cmp <= self.end
 
 
 @dataclass
@@ -63,7 +65,8 @@ class AntardashaPeriodInfo:
     
     def contains_date(self, date: datetime) -> bool:
         """Check if a date falls within this period."""
-        return self.start <= date <= self.end
+        cmp = date.replace(tzinfo=None) if date.tzinfo is not None else date
+        return self.start <= cmp <= self.end
 
 
 @dataclass
@@ -78,7 +81,8 @@ class PratyantardashaPeriodInfo:
     
     def contains_date(self, date: datetime) -> bool:
         """Check if a date falls within this period."""
-        return self.start <= date <= self.end
+        cmp = date.replace(tzinfo=None) if date.tzinfo is not None else date
+        return self.start <= cmp <= self.end
 
 
 class VimshottariDasha:
@@ -90,10 +94,11 @@ class VimshottariDasha:
         
         Args:
             moon_longitude: Moon's sidereal longitude at birth
-            birth_datetime: Birth date and time
+            birth_datetime: Birth date and time (naive or aware; stored as naive)
         """
         self.moon_longitude = moon_longitude
-        self.birth_dt = birth_datetime
+        # Normalize to naive datetime so all internal timedelta arithmetic is consistent
+        self.birth_dt = birth_datetime.replace(tzinfo=None) if birth_datetime.tzinfo is not None else birth_datetime
         self.nakshatra = get_nakshatra(moon_longitude)
     
     def get_birth_dasha_lord(self) -> str:
@@ -297,7 +302,9 @@ class VimshottariDasha:
             Dictionary with current periods
         """
         if target_date is None:
-            target_date = datetime.now(tz=timezone.utc)  # TASK-008: timezone-aware
+            target_date = datetime.now(tz=timezone.utc)
+        # Strip tzinfo so comparison with naive period datetimes doesn't raise TypeError
+        target_date = target_date.replace(tzinfo=None) if target_date.tzinfo is not None else target_date
         
         # Find current Mahadasha
         mahadashas = self.generate_mahadasha_timeline()

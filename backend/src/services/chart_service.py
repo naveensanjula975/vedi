@@ -201,7 +201,11 @@ class ChartService:
             Current periods response
         """
         if target_date is None:
-            target_date = datetime.now(tz=timezone.utc)  # TASK-008: timezone-aware
+            target_date = datetime.now(tz=timezone.utc)
+        # Normalize to naive UTC so dasha arithmetic stays consistent
+        if target_date.tzinfo is not None:
+            import pytz
+            target_date = target_date.astimezone(pytz.UTC).replace(tzinfo=None)
         
         dasha_calc = self._create_dasha_calculator(birth_data)
         current = dasha_calc.get_current_periods(target_date)
