@@ -42,10 +42,14 @@ async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
+  // Use VITE_API_KEY if configured in environment variables
+  const apiKey = import.meta.env.VITE_API_KEY || '';
+  
   const response = await fetch(`${API_BASE}${endpoint}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
+      ...(apiKey ? { 'X-API-Key': apiKey } : {}),
       ...options.headers,
     },
   });
