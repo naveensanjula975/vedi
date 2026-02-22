@@ -2,7 +2,7 @@
 Chart calculation service - orchestrates all astronomical calculations.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from ..core.ephemeris import get_planet_positions, SiderealCalculator, datetime_to_jd
@@ -201,7 +201,7 @@ class ChartService:
             Current periods response
         """
         if target_date is None:
-            target_date = datetime.now()
+            target_date = datetime.now(tz=timezone.utc)  # TASK-008: timezone-aware
         
         dasha_calc = self._create_dasha_calculator(birth_data)
         current = dasha_calc.get_current_periods(target_date)

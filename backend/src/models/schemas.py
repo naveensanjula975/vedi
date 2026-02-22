@@ -1,10 +1,16 @@
 """
 Pydantic models for API request/response validation.
+
+Security hardening applied:
+    - timezone validated against IANA list (no raw pytz errors leaked)
+    - name field capped at 100 characters
 """
 
-from pydantic import BaseModel, Field
+import pytz
 from datetime import datetime
 from typing import Optional, Literal
+
+from pydantic import BaseModel, Field, field_validator
 
 
 class BirthData(BaseModel):
@@ -12,12 +18,31 @@ class BirthData(BaseModel):
     date: datetime = Field(..., description="Birth date and time")
     latitude: float = Field(..., ge=-90, le=90, description="Birth place latitude")
     longitude: float = Field(..., ge=-180, le=180, description="Birth place longitude")
-    timezone: str = Field(default="Etc/GMT+4", description="Timezone (e.g., 'Asia/Kolkata', 'Etc/GMT+4' for UTC-4)")
+    timezone: str = Field(
+        default="Asia/Kolkata",
+        description="IANA timezone string (e.g., 'Asia/Kolkata', 'America/New_York')",
+    )
     ayanamsa: Literal["LAHIRI", "KRISHNAMURTI", "RAMAN"] = Field(
         default="LAHIRI",
-        description="Ayanamsa system to use"
+        description="Ayanamsa system to use",
     )
-    name: Optional[str] = Field(default=None, description="Name of the person")
+    #  : cap name at 100 chars — it is echoed back in every response
+    name: Optional[str] = Field(
+        default=None,
+        max_length=100,
+        description="Optional name of the person (max 100 characters)",
+    )
+
+    #  : validate timezone against the full IANA database
+    @field_validator("timezone")
+    @classmethod
+    def validate_timezone(cls, v: str) -> str:
+        if v not in pytz.all_timezones_set:
+            raise ValueError(
+                f"Invalid timezone '{v}'. "
+                "Please provide an IANA timezone string such as 'Asia/Kolkata' or 'America/New_York'."
+            )
+        return v
     
     model_config = {
         "json_schema_extra": {

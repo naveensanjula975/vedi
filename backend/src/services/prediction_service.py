@@ -3,7 +3,7 @@ Prediction Service for Dasha periods.
 Integrates with the Dasha engine to provide detailed predictions.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List, Optional, Any
 
 from ..core.ephemeris import get_planet_positions
@@ -61,7 +61,7 @@ class PredictionService:
         dasha = VimshottariDasha(moon_lon, birth_data.date)
         
         if target_date is None:
-            target_date = datetime.now()
+            target_date = datetime.now(tz=timezone.utc)  # TASK-008: timezone-aware
         
         current = dasha.get_current_periods(target_date)
         

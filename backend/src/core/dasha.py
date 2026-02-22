@@ -3,7 +3,7 @@ Vimshottari Dasha System for Vedic Astrology.
 Calculates Mahadasha, Antardasha, and Pratyantardasha periods.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
 from typing import Optional
 from dataclasses import dataclass
@@ -297,7 +297,7 @@ class VimshottariDasha:
             Dictionary with current periods
         """
         if target_date is None:
-            target_date = datetime.now()
+            target_date = datetime.now(tz=timezone.utc)  # TASK-008: timezone-aware
         
         # Find current Mahadasha
         mahadashas = self.generate_mahadasha_timeline()
